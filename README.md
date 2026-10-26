@@ -23,28 +23,7 @@ git clone https://github.com/leethoneid/math-teaching-animation.git
 
 注意三点：复制的是整个文件夹（里面含 SKILL.md 与 assets），不要只拷 SKILL.md 一个文件；个别版本的 Antigravity 改读 `~/.agents/skills`，上面那条路装完没生效就换这个目录；装完重启 agent 会话，技能在会话启动时扫描。
 
-### Antigravity：从 zip 安装
-
-```bash
-unzip math-teaching-animation-antigravity.zip
-mkdir -p ~/.gemini/antigravity/skills
-cp -r math-teaching-animation ~/.gemini/antigravity/skills/
-```
-
-个别版本的 Antigravity 编辑器改读 `~/.agents/skills`，如果上面那条路装完没生效，改用：
-
-```bash
-mkdir -p ~/.agents/skills
-cp -r math-teaching-animation ~/.agents/skills/
-```
-
-### 只给当前项目安装（Antigravity）
-
-```bash
-unzip math-teaching-animation-antigravity.zip
-mkdir -p .agents/skills
-cp -r math-teaching-animation .agents/skills/
-```
+更新：进克隆目录 `git pull` 后重新复制即可。
 
 ## 使用方法
 
