@@ -2,7 +2,7 @@
 
 ## math-teaching-animation (Agent Skills package)
 
-Turns a middle-school math concept or homework problem into an interactive animated teaching HTML page, following the Agent Skills open standard (a folder containing SKILL.md). Works with any SKILL.md-compatible client, including Antigravity, Claude Code, Codex, Gemini CLI, and Cursor — not Antigravity only.
+Turns a math concept or homework problem into an interactive animated teaching HTML page, following the Agent Skills open standard (a folder containing SKILL.md). Works with any SKILL.md-compatible client, including Antigravity, Claude Code, Codex, Gemini CLI, and Cursor — not Antigravity only.
 
 ## Installation
 

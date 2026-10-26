@@ -2,7 +2,7 @@
 
 ## math-teaching-animation（Agent Skills 技能包）
 
-为中学生把数学知识点或作业题做成可交互动画教学 HTML 的技能，遵循 Agent Skills 开放标准（一个含 SKILL.md 的文件夹）。适用于 Antigravity、Claude Code、Codex、Gemini CLI、Cursor 等支持 SKILL.md 的客户端，不只限于 Antigravity。
+把数学知识点或作业题做成可交互动画教学 HTML 的技能，遵循 Agent Skills 开放标准（一个含 SKILL.md 的文件夹）。适用于 Antigravity、Claude Code、Codex、Gemini CLI、Cursor 等支持 SKILL.md 的客户端，不只限于 Antigravity。
 
 ## 安装
 
@@ -58,9 +58,11 @@ cp -r math-teaching-animation .agents/skills/
 
 ## 示例
 
+![汇合点题目原文](assets/meeting-point-problem.png)
+
 ![汇合点示例效果](assets/meeting-point-preview.gif)
 
-- 汇合点示例效果图（上图）与复现提示词见 `meeting-point-prompt.md`：把提示词发给装好本技能的 agent，即可生成同类页面。
+- 上面第一张是题目原文，第二张是动画效果；复现提示词见 `meeting-point-prompt.md`：把提示词发给装好本技能的 agent，即可生成同类页面。
 - 本包 `assets/example-meeting-point.html`：汇合点最小路程问题（街道四个小区、加权路程和最小），直接用浏览器打开就能看成品效果，对照讲法与实现。
 - 概念例：“用动画讲一下完全平方公式”→ 面积模型＋滑杆改 a、b，看 (a+b)² 如何展开。
 
