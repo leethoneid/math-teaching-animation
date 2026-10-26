@@ -23,28 +23,7 @@ git clone https://github.com/leethoneid/math-teaching-animation.git
 
 Three notes: copy the whole folder (it contains SKILL.md and assets), not just SKILL.md alone; some Antigravity versions read `~/.agents/skills` instead — switch to that directory if the above path doesn't take effect; restart the agent session after installing, since skills are scanned at session startup.
 
-### Antigravity: install from zip
-
-```bash
-unzip math-teaching-animation-antigravity.zip
-mkdir -p ~/.gemini/antigravity/skills
-cp -r math-teaching-animation ~/.gemini/antigravity/skills/
-```
-
-If your Antigravity version reads `~/.agents/skills` instead, use:
-
-```bash
-mkdir -p ~/.agents/skills
-cp -r math-teaching-animation ~/.agents/skills/
-```
-
-### Project-only install (Antigravity)
-
-```bash
-unzip math-teaching-animation-antigravity.zip
-mkdir -p .agents/skills
-cp -r math-teaching-animation .agents/skills/
-```
+To update: `git pull` inside the cloned repo, then copy again.
 
 ## Usage
 
