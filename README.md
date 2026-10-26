@@ -1,3 +1,5 @@
+[English](README_EN.md) | 中文
+
 # math-teaching-animation（Agent Skills 技能包）
 
 为中学生把数学知识点或作业题做成可交互动画教学 HTML 的技能，遵循 Agent Skills 开放标准（一个含 SKILL.md 的文件夹）。适用于 Antigravity、Claude Code、Codex、Gemini CLI、Cursor 等支持 SKILL.md 的客户端，不只限于 Antigravity。
