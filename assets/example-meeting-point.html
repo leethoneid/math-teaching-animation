@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>汇合点在哪里？路程和最小问题</title>
+<style>
+  body { font-family: system-ui, "PingFang SC", "Microsoft YaHei", sans-serif; max-width: 760px; margin: 0 auto; padding: 24px; color: #222; line-height: 1.7; }
+  h1 { font-size: 26px; }
+  .legend span { display: inline-block; width: 14px; height: 14px; margin: 0 4px -2px 16px; }
+  .controls { margin: 14px 0; }
+  .controls button { font-size: 16px; padding: 6px 14px; margin-right: 8px; cursor: pointer; }
+  .controls label { font-size: 16px; }
+  .controls input[type=range] { vertical-align: middle; width: 420px; }
+  #total { font-size: 24px; margin: 12px 0; }
+  #total b { color: #2ea35a; }
+  #stepText { font-size: 18px; background: #f6f6f6; padding: 12px 16px; border-left: 4px solid #2b7de0; min-height: 86px; }
+  #breakdown { font-size: 16px; background: #fafafa; padding: 10px 16px; }
+  #tip { color: #b35400; }
+  svg text { font-size: 16px; text-anchor: middle; }
+  .small { font-size: 14px; fill: #555; }
+  .axis { stroke: #999; stroke-width: 1; }
+</style>
+</head>
+<body>
+<h1>汇合点在哪里？路程和最小问题</h1>
+<p>一条笔直的街道上有 E、F、G、H 四个小区，相邻 300 米。E、F、G、H 各有 2、2、2、3 名学生，要先在街上某处 M 汇合。M 放在哪里，所有人走的路加起来最短？</p>
+<p class="legend">配色：
+  <span style="background:#2b7de0"></span>蓝色 = 四个小区（已知）
+  <span style="background:#f28c28"></span>橙色 = 汇合点 M（待定）
+  <span style="background:#2ea35a"></span>绿色 = 最小值（结论）
+</p>
+<div class="controls">
+  <label>拖动 M：<input id="mSlider" type="range" min="0" max="900" step="10" value="0"></label>
+  <span id="mLabel">M 距 E 0 米</span>
+</div>
+<svg id="street" width="720" height="190" viewBox="0 0 720 190"></svg>
+<div id="total"></div>
+<div id="breakdown"></div>
+<svg id="graph" width="720" height="280" viewBox="0 0 720 280"></svg>
+<div class="controls">
+  <button id="prevBtn">上一步</button>
+  <button id="playBtn">播放</button>
+  <button id="nextBtn">下一步</button>
+  <button id="resetBtn">重置</button>
+</div>
+<div id="stepText"></div>
+<p id="tip"></p>
+<script>
+var W = [2, 2, 2, 3];
+var P = [0, 300, 600, 900];
+var NAMES = ["E", "F", "G", "H"];
+var M = 0, step = 0, timer = null;
+var NS = "http://www.w3.org/2000/svg";
+var street = document.getElementById("street");
+var graph = document.getElementById("graph");
+var steps = [
+  "第 0 步：先看清题目。四个小区在一条街上，相邻 300 米，人数是 E 2 人、F 2 人、G 2 人、H 3 人，一共 9 人。",
+  "第 1 步：拖动滑杆移动 M，或者直接点街道，总路程会跟着变。先猜一猜：M 在哪里最小？",
+  "第 2 步：把 M 分别放在四个小区算一算：E 处 4500 米，F 处 3000 米，G 处 2700 米，H 处 3600 米。最小的是 G 处。",
+  "第 3 步：为什么是 G？M 在 G 时，往右挪 1 米：左边 E、F、G 的 6 人各远 1 米（+6），右边 H 的 3 人各近 1 米（-3），合计 +3，变大。往左挪 1 米：E、F 的 4 人各近 1 米（-4），G 的 2 人和 H 的 3 人各远 1 米（+5），合计 +1，也变大。左右都变大，G 就是最低点。",
+  "第 4 步：结论：汇合点设在 G 小区门口，总路程最小 2700 米。人数最多的 H 不一定是最优点，要看左右两边人数的对比。"
+];
+function X(m) { return 60 + m * 0.6667; }
+function el(svg, tag, attrs, txt) {
+  var e = document.createElementNS(NS, tag);
+  for (var k in attrs) e.setAttribute(k, attrs[k]);
+  if (txt !== undefined) e.textContent = txt;
+  svg.appendChild(e);
+  return e;
+}
+function total(x) {
+  var s = 0;
+  for (var i = 0; i < 4; i++) s += W[i] * Math.abs(x - P[i]);
+  return s;
+}
+function drawStreet() {
+  street.innerHTML = "";
+  el(street, "line", { x1: 40, y1: 110, x2: 680, y2: 110, stroke: "#333", "stroke-width": 3 });
+  for (var i = 0; i < 4; i++) {
+    var x = X(P[i]);
+    el(street, "circle", { cx: x, cy: 110, r: 9, fill: "#2b7de0" });
+    el(street, "text", { x: x, y: 145, fill: "#222" }, NAMES[i]);
+    el(street, "text", { x: x, y: 168, fill: "#555", class: "small" }, W[i] + "人");
+    for (var j = 0; j < W[i]; j++) {
+      el(street, "circle", { cx: x - (W[i] - 1) * 9 + j * 18, cy: 82, r: 7, fill: "#2b7de0", opacity: 0.55 });
+    }
+    el(street, "line", { x1: x, y1: 110, x2: X(M), y2: 60, stroke: "#2b7de0", "stroke-width": 1, opacity: 0.35 });
+  }
+  el(street, "polygon", { points: (X(M) - 11) + ",52 " + (X(M) + 11) + ",52 " + X(M) + ",72", fill: "#f28c28" });
+  el(street, "text", { x: X(M), y: 42, fill: "#f28c28" }, "M");
+}
+function drawGraph() {
+  graph.innerHTML = "";
+  function GY(f) { return 240 - (f - 2400) * (200 / 2400); }
+  el(graph, "line", { x1: 60, y1: 240, x2: 680, y2: 240, class: "axis" });
+  el(graph, "line", { x1: 60, y1: 20, x2: 60, y2: 240, class: "axis" });
+  var pts = [];
+  for (var m = 0; m <= 900; m += 10) pts.push(X(m) + "," + GY(total(m)));
+  el(graph, "polyline", { points: pts.join(" "), fill: "none", stroke: "#2b7de0", "stroke-width": 2.5 });
+  for (var i = 0; i < 4; i++) {
+    el(graph, "text", { x: X(P[i]), y: 262, fill: "#555", class: "small" }, NAMES[i]);
+  }
+  el(graph, "circle", { cx: X(600), cy: GY(2700), r: 8, fill: "#2ea35a" });
+  el(graph, "text", { x: X(600), y: GY(2700) - 16, fill: "#2ea35a" }, "最小值 2700 米（G 处）");
+  el(graph, "circle", { cx: X(M), cy: GY(total(M)), r: 7, fill: "#f28c28", stroke: "#fff", "stroke-width": 2 });
+}
+function draw() {
+  drawStreet();
+  drawGraph();
+  document.getElementById("mLabel").textContent = "M 距 E " + M + " 米";
+  var t = total(M);
+  document.getElementById("total").innerHTML =
+    "总路程 = 2×" + Math.abs(M - 0) + " + 2×" + Math.abs(M - 300) +
+    " + 2×" + Math.abs(M - 600) + " + 3×" + Math.abs(M - 900) +
+    " = <b>" + t + " 米</b>";
+  var bd = "";
+  for (var i = 0; i < 4; i++) {
+    bd += NAMES[i] + "： " + W[i] + " 人 × " + Math.abs(M - P[i]) + " 米 = " +
+      (W[i] * Math.abs(M - P[i])) + " 米　";
+  }
+  document.getElementById("breakdown").textContent = bd;
+  document.getElementById("stepText").textContent = steps[step];
+  document.getElementById("tip").textContent = (step >= 4) ?
+    "想一想：如果 H 有 10 个人，最优点还会是 G 吗？拖动 M 试试，再用左右人数对比验证。" : "";
+}
+function setStep(n) {
+  step = Math.max(0, Math.min(4, n));
+  stopPlay();
+  draw();
+}
+function stopPlay() {
+  if (timer) { clearInterval(timer); timer = null; }
+  document.getElementById("playBtn").textContent = "播放";
+}
+document.getElementById("prevBtn").onclick = function () { setStep(step - 1); };
+document.getElementById("nextBtn").onclick = function () { setStep(step + 1); };
+document.getElementById("resetBtn").onclick = function () { M = 0; document.getElementById("mSlider").value = 0; setStep(0); };
+document.getElementById("playBtn").onclick = function () {
+  if (timer) { stopPlay(); return; }
+  document.getElementById("playBtn").textContent = "暂停";
+  M = 0;
+  document.getElementById("mSlider").value = 0;
+  timer = setInterval(function () {
+    if (M >= 900) { stopPlay(); return; }
+    M += 10;
+    document.getElementById("mSlider").value = M;
+    draw();
+  }, 60);
+};
+document.getElementById("mSlider").oninput = function (e) { M = +e.target.value; draw(); };
+street.addEventListener("click", function (e) {
+  var r = street.getBoundingClientRect();
+  var px = (e.clientX - r.left) * (720 / r.width);
+  M = Math.max(0, Math.min(900, Math.round((px - 60) / 0.6667 / 10) * 10));
+  document.getElementById("mSlider").value = M;
+  draw();
+});
+draw();
+</script>
+</body>
+</html>
