@@ -57,6 +57,9 @@ cp -r math-teaching-animation .agents/skills/
 
 ## 示例
 
+![汇合点示例效果](assets/meeting-point-preview.gif)
+
+- 汇合点示例效果图（上图）与复现提示词见 `meeting-point-prompt.md`：把提示词发给装好本技能的 agent，即可生成同类页面。
 - 本包 `assets/example-meeting-point.html`：汇合点最小路程问题（街道四个小区、加权路程和最小），直接用浏览器打开就能看成品效果，对照讲法与实现。
 - 概念例：“用动画讲一下完全平方公式”→ 面积模型＋滑杆改 a、b，看 (a+b)² 如何展开。
 
