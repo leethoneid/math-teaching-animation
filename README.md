@@ -58,9 +58,11 @@ Output standard: a single self-contained HTML file — double-click to open in a
 
 ## Examples
 
+![Meeting-point problem statement](assets/meeting-point-problem.png)
+
 ![Meeting-point example](assets/meeting-point-preview.gif)
 
-- Meeting-point example (image above) and its reproduction prompt: see `meeting-point-prompt.md` (prompt in Chinese) — send the prompt to an agent with this skill installed to generate a similar page.
+- The first image above is the original problem statement; the second is the animation. Its reproduction prompt: see `meeting-point-prompt.md` (prompt in Chinese) — send the prompt to an agent with this skill installed to generate a similar page.
 - Included in this repo: `assets/example-meeting-point.html` — the meeting-point minimum-total-distance problem (four neighborhoods on a street, weighted distance sum minimized). Open it directly in a browser to see the finished page and compare it with the teaching approach and implementation.
 - Concept example: "Explain the perfect square formula with an animation" → area model + sliders for a and b, showing how (a+b)² expands.
 
